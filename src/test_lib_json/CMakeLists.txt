@@ -10,7 +10,7 @@ add_executable( jsoncpp_test
 if(BUILD_SHARED_LIBS)
     add_definitions( -DJSON_DLL )
 endif()
-target_link_libraries(jsoncpp_test jsoncpp_lib)
+target_link_libraries(jsoncpp_test jsoncpp)
 
 # another way to solve issue #90
 #set_target_properties(jsoncpp_test PROPERTIES COMPILE_FLAGS -ffloat-store)
@@ -23,7 +23,7 @@ if(JSONCPP_WITH_POST_BUILD_UNITTEST)
         # Then, run the test executable.
         add_custom_command( TARGET jsoncpp_test
                             POST_BUILD
-                            COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:jsoncpp_lib> $<TARGET_FILE_DIR:jsoncpp_test>
+                            COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:jsoncpp> $<TARGET_FILE_DIR:jsoncpp_test>
                             COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:jsoncpp_test>)
     else(BUILD_SHARED_LIBS)
         # Just run the test executable.
