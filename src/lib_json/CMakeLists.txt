@@ -140,8 +140,3 @@ if(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
                                 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
                                 $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/${JSONCPP_INCLUDE_DIR}>)
 endif()
-
-install( EXPORT jsoncpp
-         NAMESPACE jsoncpp::
-         DESTINATION  ${CMAKE_INSTALL_LIBDIR}/cmake/jsoncpp
-        )
