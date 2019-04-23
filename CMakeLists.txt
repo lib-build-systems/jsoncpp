@@ -148,6 +148,7 @@ ENDIF()
 
 IF(JSONCPP_WITH_CMAKE_PACKAGE)
         INSTALL(EXPORT jsoncpp
+                NAMESPACE jsoncpp::
                 DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/jsoncpp
                 FILE        jsoncppConfig.cmake)
 ENDIF()
