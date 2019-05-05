@@ -143,13 +143,13 @@ IF(JSONCPP_WITH_PKGCONFIG_SUPPORT)
         "pkg-config/jsoncpp.pc"
         @ONLY)
     INSTALL(FILES "${CMAKE_CURRENT_BINARY_DIR}/pkg-config/jsoncpp.pc"
-            DESTINATION "${CMAKE_INSTALL_LIBDIR}/cmake/jsoncpp")
+            DESTINATION lib/cmake/jsoncpp)
 ENDIF()
 
 IF(JSONCPP_WITH_CMAKE_PACKAGE)
         INSTALL(EXPORT jsoncpp
                 NAMESPACE jsoncpp::
-                DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/jsoncpp
+                DESTINATION lib/cmake/jsoncpp
                 FILE jsoncpp-targets.cmake)
 ENDIF()
 
