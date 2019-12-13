@@ -3,14 +3,20 @@
 add_executable( jsoncpp_test
                 jsontest.cpp
                 jsontest.h
+                fuzz.cpp
+                fuzz.h
                 main.cpp
                 )
 
 
 if(BUILD_SHARED_LIBS)
+  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.12.0)
+    add_compile_definitions( JSON_DLL )
+  else()
     add_definitions( -DJSON_DLL )
+  endif()
 endif()
-target_link_libraries(jsoncpp_test jsoncpp)
+target_link_libraries(jsoncpp_test jsoncpp_lib)
 
 # another way to solve issue #90
 #set_target_properties(jsoncpp_test PROPERTIES COMPILE_FLAGS -ffloat-store)
@@ -23,7 +29,7 @@ if(JSONCPP_WITH_POST_BUILD_UNITTEST)
         # Then, run the test executable.
         add_custom_command( TARGET jsoncpp_test
                             POST_BUILD
-                            COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:jsoncpp> $<TARGET_FILE_DIR:jsoncpp_test>
+                            COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:jsoncpp_lib> $<TARGET_FILE_DIR:jsoncpp_test>
                             COMMAND ${CMAKE_CROSSCOMPILING_EMULATOR} $<TARGET_FILE:jsoncpp_test>)
     else(BUILD_SHARED_LIBS)
         # Just run the test executable.
