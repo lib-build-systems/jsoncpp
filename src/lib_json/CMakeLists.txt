@@ -34,7 +34,11 @@ endif()
 
 if(NOT (HAVE_CLOCALE AND HAVE_LCONV_SIZE AND HAVE_DECIMAL_POINT AND HAVE_LOCALECONV))
     message(WARNING "Locale functionality is not supported")
-    add_definitions(-DJSONCPP_NO_LOCALE_SUPPORT)
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.12.0)
+      add_compile_definitions(JSONCPP_NO_LOCALE_SUPPORT)
+    else()
+      add_definitions(-DJSONCPP_NO_LOCALE_SUPPORT)
+    endif()
 endif()
 
 set( JSONCPP_INCLUDE_DIR ../../include )
@@ -42,12 +46,12 @@ set( JSONCPP_INCLUDE_DIR ../../include )
 set( PUBLIC_HEADERS
     ${JSONCPP_INCLUDE_DIR}/json/config.h
     ${JSONCPP_INCLUDE_DIR}/json/forwards.h
-    ${JSONCPP_INCLUDE_DIR}/json/features.h
+    ${JSONCPP_INCLUDE_DIR}/json/json_features.h
     ${JSONCPP_INCLUDE_DIR}/json/value.h
     ${JSONCPP_INCLUDE_DIR}/json/reader.h
+    ${JSONCPP_INCLUDE_DIR}/json/version.h
     ${JSONCPP_INCLUDE_DIR}/json/writer.h
     ${JSONCPP_INCLUDE_DIR}/json/assertions.h
-    ${JSONCPP_INCLUDE_DIR}/json/version.h
     )
 
 source_group( "Public API" FILES ${PUBLIC_HEADERS} )
@@ -57,8 +61,7 @@ set(jsoncpp_sources
                 json_reader.cpp
                 json_valueiterator.inl
                 json_value.cpp
-                json_writer.cpp
-                version.h.in)
+                json_writer.cpp)
 
 # Install instructions for this target
 if(JSONCPP_WITH_CMAKE_PACKAGE)
@@ -67,23 +70,31 @@ else(JSONCPP_WITH_CMAKE_PACKAGE)
     set(INSTALL_EXPORT)
 endif()
 
+
 if(BUILD_SHARED_LIBS)
-    add_definitions( -DJSON_DLL_BUILD )
+    if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.12.0)
+      add_compile_definitions( JSON_DLL_BUILD )
+    else()
+      add_definitions( -DJSON_DLL_BUILD )
+    endif()
 endif()
 
-add_library(jsoncpp ${PUBLIC_HEADERS} ${jsoncpp_sources})
-set_target_properties( jsoncpp PROPERTIES VERSION ${JSONCPP_VERSION} SOVERSION ${JSONCPP_SOVERSION})
-set_target_properties( jsoncpp PROPERTIES POSITION_INDEPENDENT_CODE ON)
+
+add_library(jsoncpp_lib ${PUBLIC_HEADERS} ${jsoncpp_sources})
+set_target_properties( jsoncpp_lib PROPERTIES VERSION ${JSONCPP_VERSION} SOVERSION ${JSONCPP_SOVERSION})
+set_target_properties( jsoncpp_lib PROPERTIES OUTPUT_NAME jsoncpp
+                        DEBUG_OUTPUT_NAME jsoncpp${DEBUG_LIBNAME_SUFFIX} )
+set_target_properties( jsoncpp_lib PROPERTIES POSITION_INDEPENDENT_CODE ON)
 
 # Set library's runtime search path on OSX
 if(APPLE)
-    set_target_properties( jsoncpp PROPERTIES INSTALL_RPATH "@loader_path/." )
+    set_target_properties( jsoncpp_lib PROPERTIES INSTALL_RPATH "@loader_path/." )
 endif()
 
 # Specify compiler features required when compiling a given target.
 # See https://cmake.org/cmake/help/v3.1/prop_gbl/CMAKE_CXX_KNOWN_FEATURES.html#prop_gbl:CMAKE_CXX_KNOWN_FEATURES
 # for complete list of features available
-target_compile_features(jsoncpp PUBLIC
+target_compile_features(jsoncpp_lib PUBLIC
         cxx_std_11 # Compiler mode is aware of C++ 11.
         #MSVC 1900 cxx_alignas # Alignment control alignas, as defined in N2341.
         #MSVC 1900 cxx_alignof # Alignment control alignof, as defined in N2341.
@@ -130,13 +141,14 @@ target_compile_features(jsoncpp PUBLIC
         cxx_variadic_templates # Variadic templates, as defined in N2242.
 )
 
-install( TARGETS jsoncpp ${INSTALL_EXPORT}
+install( TARGETS jsoncpp_lib ${INSTALL_EXPORT}
           RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
           LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
           ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 if(NOT CMAKE_VERSION VERSION_LESS 2.8.11)
-    target_include_directories( jsoncpp PUBLIC
+    target_include_directories( jsoncpp_lib PUBLIC
                                 $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-                                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/${JSONCPP_INCLUDE_DIR}>)
+                                $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/${JSONCPP_INCLUDE_DIR}>
+                                $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/include/json>)
 endif()
