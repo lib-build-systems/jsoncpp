@@ -200,8 +200,9 @@ if(JSONCPP_WITH_PKGCONFIG_SUPPORT)
         "pkg-config/jsoncpp.pc.in"
         "pkg-config/jsoncpp.pc"
         @ONLY)
-    install(FILES "${CMAKE_CURRENT_BINARY_DIR}/pkg-config/jsoncpp.pc"
-        DESTINATION "${CMAKE_INSTALL_LIBDIR}/pkgconfig")
+    install(FILES ${CMAKE_CURRENT_BINARY_DIR}/pkg-config/jsoncpp.pc
+            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/jsoncpp
+            COMPONENT pkgconfig)
 endif()
 
 if(JSONCPP_WITH_CMAKE_PACKAGE)
