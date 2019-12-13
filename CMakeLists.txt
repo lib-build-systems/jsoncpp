@@ -393,7 +393,7 @@ IF(JSONCPP_WITH_CMAKE_PACKAGE)
 ENDIF()
 
 # Build the different applications
-ADD_SUBDIRECTORY( src )
+ADD_SUBDIRECTORY( ${CMAKE_CURRENT_SOURCE_DIR}/src )
 
 #install the includes
-ADD_SUBDIRECTORY( include )
+ADD_SUBDIRECTORY( ${CMAKE_CURRENT_SOURCE_DIR}/include )
