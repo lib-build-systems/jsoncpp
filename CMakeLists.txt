@@ -227,7 +227,7 @@ if(JSONCPP_WITH_CMAKE_PACKAGE)
                 FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 
-export(TARGETS jsoncpp
+export(TARGETS jsoncpp_lib
        FILE "${CMAKE_CURRENT_BINARY_DIR}/jsoncpp-targets.cmake")
 export(PACKAGE jsoncpp)
 
