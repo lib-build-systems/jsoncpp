@@ -219,7 +219,7 @@ add_subdirectory( include )
 if(JSONCPP_WITH_CMAKE_PACKAGE)
         include (CMakePackageConfigHelpers)
 
-        install(TARGETS jsoncpp_lib
+        install(TARGETS jsoncpp
                 EXPORT jsoncpp-targets
                 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -227,7 +227,7 @@ if(JSONCPP_WITH_CMAKE_PACKAGE)
                 FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
 endif()
 
-export(TARGETS jsoncpp_lib
+export(TARGETS jsoncpp
        FILE "${CMAKE_CURRENT_BINARY_DIR}/jsoncpp-targets.cmake")
 export(PACKAGE jsoncpp)
 
