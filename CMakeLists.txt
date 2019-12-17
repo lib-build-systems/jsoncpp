@@ -205,11 +205,22 @@ if(JSONCPP_WITH_PKGCONFIG_SUPPORT)
             COMPONENT pkgconfig)
 endif()
 
+if(JSONCPP_WITH_TESTS)
+  enable_testing()
+  include(CTest)
+endif()
+
+# Build the different applications
+add_subdirectory( src )
+
+#install the includes
+add_subdirectory( include )
+
 if(JSONCPP_WITH_CMAKE_PACKAGE)
         include (CMakePackageConfigHelpers)
 
         install(TARGETS jsoncpp
-	            EXPORT jsoncpp-targets
+                EXPORT jsoncpp-targets
                 RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
                 LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
                 ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -228,17 +239,6 @@ if(JSONCPP_WITH_CMAKE_PACKAGE)
                 VERSION ${PROJECT_VERSION}
                 COMPATIBILITY SameMajorVersion)
 endif()
-
-if(JSONCPP_WITH_TESTS)
-  enable_testing()
-  include(CTest)
-endif()
-
-# Build the different applications
-add_subdirectory( src )
-
-#install the includes
-add_subdirectory( include )
 
 #install the example
 add_subdirectory( example )
