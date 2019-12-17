@@ -207,15 +207,26 @@ endif()
 
 if(JSONCPP_WITH_CMAKE_PACKAGE)
         include (CMakePackageConfigHelpers)
-        install(EXPORT jsoncpp
+
+        install(TARGETS jsoncpp
+	            EXPORT jsoncpp-targets
+                RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+                LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
+                FRAMEWORK DESTINATION ${CMAKE_INSTALL_LIBDIR})
+endif()
+
+export(TARGETS jsoncpp
+       FILE "${CMAKE_CURRENT_BINARY_DIR}/jsoncpp-targets.cmake")
+export(PACKAGE jsoncpp)
+
+if(JSONCPP_WITH_CMAKE_PACKAGE)
+        install(EXPORT jsoncpp-targets
                 NAMESPACE jsoncpp::
-                DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/jsoncpp
-                FILE        jsoncppConfig.cmake)
-        write_basic_package_version_file ("${CMAKE_CURRENT_BINARY_DIR}/jsoncppConfigVersion.cmake"
+                DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/jsoncpp)
+        write_basic_package_version_file ("${CMAKE_CURRENT_BINARY_DIR}/jsoncpp-config-version.cmake"
                 VERSION ${PROJECT_VERSION}
                 COMPATIBILITY SameMajorVersion)
-        install(FILES ${CMAKE_CURRENT_BINARY_DIR}/jsoncppConfigVersion.cmake
-                DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/jsoncpp)
 endif()
 
 if(JSONCPP_WITH_TESTS)
